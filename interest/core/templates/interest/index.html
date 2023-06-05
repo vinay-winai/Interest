@@ -1,0 +1,50 @@
+{% extends "interest/layout.html" %}
+
+{% block title %}
+  Interest
+{% endblock %}
+
+{% block body %}
+<style>
+    .button-on {
+        background-color: green;
+    }
+
+    .button-off {
+        background-color: grey;
+    }
+</style>
+
+<button id="toggleButton" class="button {% if is_on %}button-on{% else %}button-off{% endif %}" onclick="toggleButton()">{% if is_on %}On{% else %}Off{% endif %}</button>
+
+<script>
+    function toggleButton() {
+        var button = document.getElementById('toggleButton');
+        var currentState = button.classList.contains('button-on') ? 'off' : 'on';
+
+        fetch("{% url 'index' %}", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "X-CSRFToken": "{{ csrf_token }}"
+            },
+            body: JSON.stringify({ state: currentState })
+        })
+        .then(function(response) {
+            return response.json();
+        })
+        .then(function(data) {
+            if (data.success) {
+                button.classList.toggle('button-on');
+                button.classList.toggle('button-off');
+                button.textContent = data.message;
+            } else {
+                console.error(data.error);
+            }
+        })
+        .catch(function(error) {
+            console.error("An error occurred:", error);
+        });
+    }
+</script>
+{% endblock %}
