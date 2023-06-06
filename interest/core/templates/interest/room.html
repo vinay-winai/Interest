@@ -5,6 +5,15 @@
 {% endblock %}
 
 {% block body %}
+    <style>
+        .button {
+            background-color: red;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            cursor: pointer;
+        }
+    </style>
     <textarea id="chat-log" cols="100" rows="20"></textarea><br>
     <input id="chat-message-input" type="text" size="100"><br>
     <input id="chat-message-submit" type="button" value="Send">
@@ -78,4 +87,7 @@
             messageInputDom.value = '';
         };
     </script>
+      <form action="{% url 'index' %}">
+        <button class="button" type="submit">Exit chat</button>
+    </form>
 {% endblock %}
