@@ -13,9 +13,23 @@
     .button-off {
         background-color: grey;
     }
+    #centerButton {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+    .button {
+        background-color: blue;
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        cursor: pointer;
+    }
 </style>
 
-<button id="toggleButton" class="button {% if is_on %}button-on{% else %}button-off{% endif %}" onclick="toggleButton()">{% if is_on %}On{% else %}Off{% endif %}</button>
+<button id="toggleButton" class="button-off" onclick="toggleButton()">Off</button>
 
 <script>
     function toggleButton() {
@@ -47,4 +61,10 @@
         });
     }
 </script>
+<div id="centerButton">
+  <form method="POST" action="{% url 'connect' %}">
+      {% csrf_token %}
+      <button class="button" type="submit">Connect</button>
+  </form>
+</div>
 {% endblock %}

@@ -6,6 +6,6 @@ urlpatterns = [
     path("login/", views.login_view, name="login"),
     path("logout/", views.logout_view, name="logout"),
     path("register/", views.register, name="register"),
-    path("connect/", views.cindex, name="cindex"),
-    path("<str:room_name>/", views.room, name="room"),
+    path("connect/", views.connect, name="connect"),
+    path("get_other_user_details/", views.get_other_user_details, name="get_other_user_details"),
 ]

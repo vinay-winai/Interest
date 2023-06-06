@@ -19,7 +19,40 @@
             + roomName
             + '/'
         );
-
+        const user_name = '{{ user_name|escapejs}}'
+        const other_user = roomName.replace(user_name,"")
+        let user_details = ""
+        
+        fetch("{% url 'get_other_user_details' %}", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "X-CSRFToken": "{{ csrf_token }}"
+            },
+            body: JSON.stringify({ username: other_user })
+        })
+        .then(function(response) {
+            return response.json();
+        })
+        .then(function(data) {
+            if (data.success) {
+                let user_details_string = ""
+                user_details = data.user_details
+                for (let key in user_details) {
+                    if (user_details.hasOwnProperty(key)) {
+                        user_details_string += key + ": " + user_details[key] + "\n";
+                    }
+                }
+            if (document.querySelector('#chat-log').value == "")
+                document.querySelector('#chat-log').value = user_details_string
+            } else {
+                console.error(data.error);
+            }
+        })
+        .catch(function(error) {
+            console.error("An error occurred:", error);
+        });
+        
         chatSocket.onmessage = function(e) {
             const data = JSON.parse(e.data);
             document.querySelector('#chat-log').value += (data.message + '\n');
@@ -38,7 +71,7 @@
 
         document.querySelector('#chat-message-submit').onclick = function(e) {
             const messageInputDom = document.querySelector('#chat-message-input');
-            const message = messageInputDom.value;
+            const message = user_name+':'+messageInputDom.value;
             chatSocket.send(JSON.stringify({
                 'message': message
             }));
